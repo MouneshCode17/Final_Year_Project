@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;500;600&display=swap" rel="stylesheet">
+<style>
+    #head{
+        color: rgb(10, 10, 15);
+    }
+    #head:hover{
+        transition: color 0.3ms;
+    }
+
+
+</style>
+
+
+
+    <title>Cricket Probability</title>
+</head>
+<body>
+    <script src = 'script.js'></script>
+
+    <div class="context">
+        <h1><span id="head" onmouseover="changeColor(this)"></span></h1>
+
+    </div>
+
+
+
+    <div class ='form'>
+        <form id="myForm">
+           <div class="bat">  <label for="bat">Batting Team</label>
+            <select id="teams_bat" name="teams_bat" onchange="changeBatSquad()">
+                <option value="CSK">Chennai Super Kings</option>
+                <option value="MI">Mumbai Indians</option>
+                <option value="GT">Gujarat Titans</option>
+                <option value="RCB">Royal Challengers Bangalore</option>
+                <option value="RR">Rajasthan Royals</option>
+                <option value="LSG">Lucknow Super Giants</option>
+                <option value="PBKS">Punjab Kings</option>
+                <option value="SRH">Sun Risers Hyderabad</option>
+                <option value="DC">Delhi Capitals</option>
+                <option value="KKR">Kolkata Knight Riders</option>
+            </select></div>
+           <div class='bowl'> <label for="bowl">Bowling Team</label>
+            <select id="teams_bowl" name="teams_bowl" onchange="changeBowlSquad()">
+                <option value="MI">Mumbai Indians</option>
+                <option value="CSK">Chennai Super Kings</option>
+                <option value="GT">Gujarat Titans</option>
+                <option value="RCB">Royal Challengers Bangalore</option>
+                <option value="RR">Rajasthan Royals</option>
+                <option value="LSG">Lucknow Super Giants</option>
+                <option value="PBKS">Punjab Kings</option>
+                <option value="SRH">Sun Risers Hyderabad</option>
+                <option value="DC">Delhi Capitals</option>
+                <option value="KKR">Kolkata Knight Riders</option>
+            </select></div>
+           <div class='host'> <label for="host">Host City</label>
+            <select id="dropdownList" name="venue"></select>
+
+            <script>
+
+                var dataArray = ['Ahmedabad', 'Kolkata', 'Mumbai', 'Navi Mumbai', 'Pune', 'Dubai','Sharjah', 'Abu Dhabi', 'Delhi', 'Chennai', 'Hyderabad','Visakhapatnam', 'Chandigarh', 'Bengaluru', 'Jaipur', 'Indore','Raipur', 'Ranchi', 'Cuttack', 'Dharamsala', 'Nagpur','Johannesburg', 'Centurion', 'Durban', 'Bloemfontein','Port Elizabeth', 'Kimberley', 'East London', 'Cape Town']
+
+
+                var dropdownList = document.getElementById('dropdownList');
+
+
+                for (var i = 0; i < dataArray.length; i++) {
+                    var option = document.createElement('option');
+                    option.value = dataArray[i];
+                    option.text = dataArray[i];
+                    dropdownList.appendChild(option);
+                }
+            </script></div>
+            <div class='target'>  <label for="target">Target</label><input id="target" name="target"></div>
+            <div class='score'> <label for="score">Score</label><input id="score" name="score"></div>
+            <div class='overs'><label for="overs">Overs Completed</label><input id="overs" name="overs"></div>
+            <div class='wickets'> <label for="wickets">Wickets out</label><input id="wickets" name="wickets"></div>
+            <div class='bat_squad'><label>Instrike Batsman</label><select id="instrike_batsman" name="instrike_batsman">
+                <option value="">Select option</option>
+            </select></div>
+            <div class='non_squad'><label>Nonstrike Batsman</label><select id="nonstrike_batsman" name="nonstrike_batsman">
+                <option value="">Select option</option>
+            </select></div>
+            <script>
+                var options = {
+    'MI': ['Rohit Sharma', 'Ishan Kishan', 'Surya Kumar Yadav','Tilak Varma','Hardik Pandya','Mohammad Nabi','Tim David','Gerald Coetzee','Piyush Chawla','Jasprit Bumrah','Dilshan Madhushanka'],
+    'CSK': ['Devon Conway','Ruturaj Gaikwad','Daryl Mitchell','Ajinkya Rahane','Rachin Ravidra','Shivam Dube','MS Dhoni','Ravindra Jadeja','Shardul Thakur','Deepak Chahar','Matheesha Pathiraana'],
+    'LSG':['KL Rahul','Quinton De Kock','Devdutt Padikkal','Nicolas Pooran','Krunal Pandya','Marcus Stoinis','Deepak Hooda','Shivam Mavi','Mark Wood','Ravi Bishnoi','Mohsin Khan'],
+    'GT':['Shubman Gill','Wriddhiman Saha','Sai Sudharshan','Vijay Shankar','David Miller','Azmatullah Omarzai','Shahrukh Khan','Rashid Khan','Mohammed Shami','Umesh Yadav','Noor Ahmad'],
+    'DC' : ['Rishab Pant','Prithvi Shaw','David Warner','Mitchell Marsh','Harry Brook','Axar Patel','Lalit Yadav','Kuldeep Yadav','Mukesh Kumar','Anrich Nortej','Khaleel Ahmed'],
+    'RCB':['Faf duplessis','Virat Kohli','Rajat Patidar','Glenn Maxwell','Cameron Green','Dinesh Karthik','Mahipal Lomror','Mohhamed siraj','Karan Sharma','Akash Deep','Alzarri Joseph'],
+    'RR': ["Yashasvi Jaiswal", "Jos Buttler", "Sanju Samson", "Riyan Parag", "Shimron Hetmyer", "Dhruv Jurel", "Ravichandran Ashwin", "Sandeep Sharma", "Avesh Khan", "Trent Boult", "Yuzvendra Chahal"],
+    'KKR': ["Phil Salt", "Venkatesh Iyer", "Shreyas Iyer", "Nitish Rana", "Rinku Singh", "Ramandeep Singh", "Andre Russell", "Sunil Narine", "Mitchell Starc", "Harshit Rana", "Varun Chakaravarthy"],
+    'SRH':["Mayank Agarwal", "Rahul Tripathi", "Aiden Markram", "Heinrich Klaasen", "Abdul Samad", "Shahbaz Ahmed", "Marco Jansen", "Pat Cummins", "Bhuvaneshwar Kumar", "Mayank Markande", "T Natarajan"],
+    'PBKS':["Shikhar Dhawan", "Jonny Bairstow", "Sam Curran", "Liam Livingstone", "Jitesh Sharma", "Sikandar Raza", "Harpreet Brar", "Harshal Patel", "Kagiso Rabada", "Rahul Chahar", "Arshdeep Singh"]
+
+};
+
+
+function changeBatSquad() {
+    var dropdown1 = document.getElementById('teams_bat');
+    var dropdown2 = document.getElementById('instrike_batsman');
+    var dropdown3 = document.getElementById('nonstrike_batsman');
+
+    var selectedCategory = dropdown1.value;
+
+    dropdown2.innerHTML = '<option value="">Select option</option>';
+    dropdown3.innerHTML = '<option value="">Select option</option>';
+
+
+    options[selectedCategory].forEach(function(option) {
+        var optionElement = document.createElement('option');
+        optionElement.textContent = option;
+        optionElement.value = option;
+        dropdown2.appendChild(optionElement);
+    });
+
+    options[selectedCategory].forEach(function(option) {
+        var optionElement = document.createElement('option');
+        optionElement.textContent = option;
+        optionElement.value = option;
+        dropdown3.appendChild(optionElement);
+    });
+}
+
+changeBatSquad();
+
+            </script>
+            <div class="bowl_squad"><label>Instrike Bowler</label><select id="instrike_bowler" name="instrike_bowler">
+                <option value="">Select option</option>
+            </select></div>
+
+            <script>
+                var options = {
+    'MI': ['Rohit Sharma', 'Ishan Kishan', 'Surya Kumar Yadav','Tilak Varma','Hardik Pandya','Mohammad Nabi','Tim David','Gerald Coetzee','Piyush Chawla','Jasprit Bumrah','Dilshan Madhushanka'],
+    'CSK': ['Devon Conway','Ruturaj Gaikwad','Daryl Mitchell','Ajinkya Rahane','Rachin Ravidra','Shivam Dube','MS Dhoni','Ravindra Jadeja','Shardul Thakur','Deepak Chahar','Matheesha Pathiraana'],
+    'LSG':['KL Rahul','Quinton De Kock','Devdutt Padikkal','Nicolas Pooran','Krunal Pandya','Marcus Stoinis','Deepak Hooda','Shivam Mavi','Mark Wood','Ravi Bishnoi','Mohsin Khan'],
+    'GT':['Shubman Gill','Wriddhiman Saha','Sai Sudharshan','Vijay Shankar','David Miller','Azmatullah Omarzai','Shahrukh Khan','Rashid Khan','Mohammed Shami','Umesh Yadav','Noor Ahmad'],
+    'DC' :['Rishab Pant','Prithvi Shaw','David Warner','Mitchell Marsh','Harry Brook','Axar Patel','Lalit Yadav','Kuldeep Yadav','Mukesh Kumar','Anrich Nortej','Khaleel Ahmed'],
+    'RCB':['Faf duplessis','Virat Kohli','Rajat Patidar','Glenn Maxwell','Cameron Green','Dinesh Karthik','Mahipal Lomror','Mohhamed siraj','Karan Sharma','Akash Deep','Alzarri Joseph'],
+    'RR': ["Yashasvi Jaiswal", "Jos Buttler", "Sanju Samson", "Riyan Parag", "Shimron Hetmyer", "Dhruv Jurel", "Ravichandran Ashwin", "Sandeep Sharma", "Avesh Khan", "Trent Boult", "Yuzvendra Chahal"],
+    'KKR': ["Phil Salt", "Venkatesh Iyer", "Shreyas Iyer", "Nitish Rana", "Rinku Singh", "Ramandeep Singh", "Andre Russell", "Sunil Narine", "Mitchell Starc", "Harshit Rana", "Varun Chakaravarthy"],
+    'SRH':["Mayank Agarwal", "Rahul Tripathi", "Aiden Markram", "Heinrich Klaasen", "Abdul Samad", "Shahbaz Ahmed", "Marco Jansen", "Pat Cummins", "Bhuvaneshwar Kumar", "Mayank Markande", "T Natarajan"],
+    'PBKS':["Shikhar Dhawan", "Jonny Bairstow", "Sam Curran", "Liam Livingstone", "Jitesh Sharma", "Sikandar Raza", "Harpreet Brar", "Harshal Patel", "Kagiso Rabada", "Rahul Chahar", "Arshdeep Singh"]
+
+};
+
+
+function changeBowlSquad() {
+    var dropdown1 = document.getElementById('teams_bowl');
+    var dropdown2 = document.getElementById('instrike_bowler');
+    var selectedCategory = dropdown1.value;
+
+    dropdown2.innerHTML = '<option value="">Select option</option>';
+
+    options[selectedCategory].forEach(function(option) {
+        var optionElement = document.createElement('option');
+        optionElement.textContent = option;
+        optionElement.value = option;
+        dropdown2.appendChild(optionElement);
+    });
+}
+
+changeBowlSquad();
+
+            </script>
+
+
+            <div class='ship'> <label for="ship">Partnership</label> <input id="ship" name="ship"></div>
+            <div class="sub"><button type="submit" onclick="submitForm()">Submit</button></div>
+            <script>
+                function submitForm() {
+                    var form = document.getElementById("myForm");
+                    var formData = new FormData(form);
+
+                    fetch('/submit', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success:', data);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                }
+            </script>
+
+        </form>
+    </div>
+
+    <script src="https://unpkg.com/typed.js@2.0.16/dist/typed.umd.js"></script>
+    <script>
+        var typed = new Typed('#head', {
+    strings: ['IPL Win Probability'],
+    typeSpeed: 100,
+    fadeOut:true,
+    cursor:false
+  });
+    </script>
+</body>
+</html>
